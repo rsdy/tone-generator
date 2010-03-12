@@ -3,6 +3,8 @@
 #define ro 10			// audio out to speaker or amp
 #define lo 11			// audio out to speaker or amp
 int o;
+void (*fp)(int) = NULL;
+char ch;
 
 // note values for two octave scale
 // divide them by powers of two to generate other octaves
@@ -69,8 +71,13 @@ class Channel {
 	bool value;
 
 public:
-	Channel(unsigned char pin) : pin(pin), on_job(false), lastmicros(micros()) {}
+	Channel(unsigned char pin) : pin(pin), lastmicros(micros()), on_job(false) {}
+
+	bool onjob() { return on_job; };
 
 	void play();
 	void set(unsigned int freq, unsigned int t);
-}
+};
+
+extern Channel leftChannel;
+extern Channel rightChannel;

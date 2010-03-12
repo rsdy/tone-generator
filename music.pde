@@ -1,4 +1,8 @@
 #include "music.h"
+#include "sounds.pde"
+
+Channel leftChannel(lo);
+Channel rightChannel(ro);
 
 void Channel::play()
 {
@@ -17,8 +21,8 @@ void Channel::play()
 
 void Channel::set(unsigned int freq, unsigned int t)
 {
-	this.freq = (500000 / freq) - 7;
-	this.cycles = ((long)freq * (long)t) / 500;
+	this->freq = (500000 / freq) - 7;
+	cycles = ((long)freq * (long)t) / 500;
 
 	cycle = 0;
 	on_job = true;
@@ -30,6 +34,13 @@ void setup()
 	Serial.begin(9600);
 	fp = v_1;
 }
+
+void freqout(int freq1, int freq2, int t)
+{
+	leftChannel.set(freq1, t);
+	rightChannel.set(freq2, t);
+}
+
 /*
 void freqout(int freq1, int freq2, int t)	// freq in hz, t in ms
 {
@@ -148,4 +159,8 @@ void loop()
 			fp(tt);
 		}
 	}
+/*
+	leftChannel.play();
+	rightChannel.play();
+	*/
 }
