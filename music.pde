@@ -1,38 +1,37 @@
 #include "music.h"
 #include "sounds.pde"
-
-Channel leftChannel(lo);
-Channel rightChannel(ro);
+#include <TimerOne.h>
 
 void Channel::play()
 {
-	if(!on_job) return;
+	if (!on_job) return;
 
 	currmicros = millis();
-	if(currmicros - lastmicros >= freq) {
-		digitalWrite(pin, (value = !value));
-		cycle++;
-	}
-	if(cycle >= cycles) {
-		on_job = false;
+	if(currmicros - lastmicros > cycles)
+	{
 		pinMode(pin, INPUT);
+		Timer1.stop();
+		on_job = false;
 	}
 }
 
-void Channel::set(unsigned int freq, unsigned int t)
+void Channel::set(unsigned int f, unsigned int t)
 {
-	this->freq = (500000 / freq) - 7;
-	cycles = ((long)freq * (long)t) / 500;
+	this->freq = (50000000 / f);
+	cycles = ((long)f*(long)t)/25000;
 
-	cycle = 0;
-	on_job = true;
 	pinMode(pin, OUTPUT);
+	Timer1.pwm(pin, 512, this->freq);
+	lastmicros = millis();
+
+	on_job = true;
 }
 
 void setup()
 {
 	Serial.begin(9600);
 	fp = v_1;
+	Timer1.initialize();
 }
 
 void freqout(int freq1, int freq2, int t)
@@ -41,39 +40,6 @@ void freqout(int freq1, int freq2, int t)
 	rightChannel.set(freq2, t);
 }
 
-/*
-void freqout(int freq1, int freq2, int t)	// freq in hz, t in ms
-{
-	int hperiodl, hperiodr;	//calculate 1/2 period in us
-	long cycles, i;
-	unsigned long int curr, lastlo, lastro;
-	boolean rval = false, lval = false;
-
-	hperiodl = (500000 / freq1) - 7;	// subtract 7 us to make up for digitalWrite overhead
-	hperiodr = (500000 / freq2) - 7;	// subtract 7 us to make up for digitalWrite overhead
-
-	cycles = 
-	pinMode(ro, OUTPUT);	// turn on output pin
-	pinMode(lo, OUTPUT);
-	lastlo = curr = lastro = micros();
-	for (i = 0; i <= cycles * 2; curr = micros()) {
-		if (curr - lastlo >= hperiodl) {
-			lval = !lval;
-			digitalWrite(lo, lval);
-			lastlo = curr;
-			i++;
-		}
-		if (curr - lastro >= hperiodr) {
-			rval = !rval;
-			digitalWrite(ro, rval);
-			lastro = curr;
-		}
-	}
-
-	pinMode(ro, INPUT);	// shut off pin to avoid noise from other operations
-	pinMode(lo, INPUT);	// shut off pin to avoid noise from other operations
-}
-*/
 int charToNote(char c)
 {
 	switch (c) {

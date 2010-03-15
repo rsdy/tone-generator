@@ -37,7 +37,7 @@ void v_1(int t)
 
 	for(int i = 0; i < 15; i++) {
 		freqout(l[i], r[i], (i > 1 && i < 5) ? 100 : 400);
-		while(leftChannel.onjob()) {
+		while(rightChannel.onjob()) {
 			leftChannel.play();
 			rightChannel.play();
 		}

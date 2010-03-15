@@ -36,7 +36,7 @@
 
 INSTALL_DIR = /home/rhapsodhy/arduino/arduino-0018/
 TARGET = $(notdir $(CURDIR))
-PORT = /dev/ttyUSB0
+PORT = /dev/ttyUSB1
 UPLOAD_RATE = 19200
 AVRDUDE_PROGRAMMER = stk500v1
 MCU = atmega168

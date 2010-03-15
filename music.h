@@ -1,7 +1,7 @@
 #include <math.h>		// requires an Atmega168 chip
 
-#define ro 10			// audio out to speaker or amp
-#define lo 11			// audio out to speaker or amp
+#define ro 9			// audio out to speaker or amp
+#define lo 10			// audio out to speaker or amp
 int o;
 void (*fp)(int) = NULL;
 char ch;
@@ -71,7 +71,7 @@ class Channel {
 	bool value;
 
 public:
-	Channel(unsigned char pin) : pin(pin), lastmicros(micros()), on_job(false) {}
+	Channel(unsigned char pin) : pin(pin), on_job(false) {}
 
 	bool onjob() { return on_job; };
 
@@ -79,5 +79,5 @@ public:
 	void set(unsigned int freq, unsigned int t);
 };
 
-extern Channel leftChannel;
-extern Channel rightChannel;
+Channel leftChannel(lo);
+Channel rightChannel(ro);
