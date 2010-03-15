@@ -1,39 +1,15 @@
 #include "music.h"
-
-void Channel::play()
-{
-	if(!on_job) return;
-
-	currmicros = millis();
-	if(currmicros - lastmicros >= freq) {
-		digitalWrite(pin, (value = !value));
-		cycle++;
-	}
-	if(cycle >= cycles) {
-		on_job = false;
-		pinMode(pin, INPUT);
-	}
-}
-
-void Channel::set(unsigned int freq, unsigned int t)
-{
-	this.freq = (500000 / freq) - 7;
-	this.cycles = ((long)freq * (long)t) / 500;
-
-	cycle = 0;
-	on_job = true;
-	pinMode(pin, OUTPUT);
-}
+#include "sounds.pde"
 
 void setup()
 {
 	Serial.begin(9600);
 	fp = v_1;
 }
-/*
+
 void freqout(int freq1, int freq2, int t)	// freq in hz, t in ms
 {
-	int hperiodl, hperiodr;	//calculate 1/2 period in us
+	unsigned int hperiodl, hperiodr;	//calculate 1/2 period in us
 	long cycles, i;
 	unsigned long int curr, lastlo, lastro;
 	boolean rval = false, lval = false;
@@ -41,7 +17,7 @@ void freqout(int freq1, int freq2, int t)	// freq in hz, t in ms
 	hperiodl = (500000 / freq1) - 7;	// subtract 7 us to make up for digitalWrite overhead
 	hperiodr = (500000 / freq2) - 7;	// subtract 7 us to make up for digitalWrite overhead
 
-	cycles = 
+	cycles = ((long)freq1 * (long)t) / 1000;
 	pinMode(ro, OUTPUT);	// turn on output pin
 	pinMode(lo, OUTPUT);
 	lastlo = curr = lastro = micros();
@@ -62,7 +38,7 @@ void freqout(int freq1, int freq2, int t)	// freq in hz, t in ms
 	pinMode(ro, INPUT);	// shut off pin to avoid noise from other operations
 	pinMode(lo, INPUT);	// shut off pin to avoid noise from other operations
 }
-*/
+
 int charToNote(char c)
 {
 	switch (c) {

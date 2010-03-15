@@ -2,7 +2,8 @@
 
 #define ro 10			// audio out to speaker or amp
 #define lo 11			// audio out to speaker or amp
-int o;
+int o, ch;
+void (*fp)(int) = NULL;
 
 // note values for two octave scale
 // divide them by powers of two to generate other octaves
@@ -58,19 +59,3 @@ void v_1(int);
 void u_2(int);
 void u_3(int);
 void freqout(int, int, int);
-
-class Channel {
-	unsigned char pin;
-	unsigned int freq;
-	unsigned int cycles;
-	unsigned int cycle;
-	unsigned long currmicros, lastmicros;
-	bool on_job;
-	bool value;
-
-public:
-	Channel(unsigned char pin) : pin(pin), on_job(false), lastmicros(micros()) {}
-
-	void play();
-	void set(unsigned int freq, unsigned int t);
-}
