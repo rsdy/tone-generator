@@ -6,8 +6,8 @@ void Channel::play()
 {
 	if (!on_job) return;
 
-	currmicros = millis();
-	if(currmicros - lastmicros > cycles)
+	currmillis = millis();
+	if(currmillis - lastmillis > time)
 	{
 		pinMode(pin, INPUT);
 		Timer1.stop();
@@ -17,12 +17,12 @@ void Channel::play()
 
 void Channel::set(unsigned int f, unsigned int t)
 {
-	this->freq = (50000000 / f);
-	cycles = ((long)f*(long)t)/25000;
+	freq = (500000 / f);
+	time = t;
 
 	pinMode(pin, OUTPUT);
-	Timer1.pwm(pin, 512, this->freq);
-	lastmicros = millis();
+	Timer1.pwm(pin, 512, freq);
+	lastmillis = millis();
 
 	Serial.println(pin, DEC);
 
@@ -32,8 +32,9 @@ void Channel::set(unsigned int f, unsigned int t)
 void setup()
 {
 	Serial.begin(9600);
-	fp = v_1;
 	Timer1.initialize();
+	fp = v_1;
+	o = 5;
 }
 
 void freqout(int freq1, int freq2, int t)
@@ -118,14 +119,13 @@ int charToNote(char c)
 
 void loop()
 {
+	int tt, ch;
 	if (Serial.available()) {
 		ch = Serial.read();
 		Serial.print(ch);
-		int tt;
 		tt = charToNote(ch);
-		if (tt) {
+		if (tt)
 			fp(tt);
-		}
 	}
 /*
 	leftChannel.play();

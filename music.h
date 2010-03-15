@@ -4,7 +4,6 @@
 #define lo 10			// audio out to speaker or amp
 int o;
 void (*fp)(int) = NULL;
-char ch;
 
 // note values for two octave scale
 // divide them by powers of two to generate other octaves
@@ -50,25 +49,17 @@ int dsx = 96;
 int sx = 64;
 int thx = 32;
 
-// major scale just for demo, hack this
-
-float majScale[] = {
-	A, B, CS, D, E, FS, GS, A2, B2, C2S, D2, E2, F2S, G2S, A3
-};
-
 void v_1(int);
 void u_2(int);
 void u_3(int);
-void freqout(int, int, int);
+void freqout(int leftf, int rigthf, int time);
 
 class Channel {
 	unsigned char pin;
 	unsigned int freq;
-	unsigned int cycles;
-	unsigned int cycle;
-	unsigned long currmicros, lastmicros;
+	unsigned int time;
+	unsigned long currmillis, lastmillis;
 	bool on_job;
-	bool value;
 
 public:
 	Channel(unsigned char pin) : pin(pin), on_job(false) {}
@@ -76,7 +67,7 @@ public:
 	bool onjob() { return on_job; };
 
 	void play();
-	void set(unsigned int freq, unsigned int t);
+	void set(unsigned int freq, unsigned int time);
 };
 
 Channel leftChannel(lo);
