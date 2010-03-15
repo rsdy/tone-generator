@@ -24,6 +24,8 @@ void Channel::set(unsigned int f, unsigned int t)
 	Timer1.pwm(pin, 512, this->freq);
 	lastmicros = millis();
 
+	Serial.println(pin, DEC);
+
 	on_job = true;
 }
 
