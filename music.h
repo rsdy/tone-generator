@@ -2,7 +2,7 @@
 
 #define ro 10			// audio out to speaker or amp
 #define lo 11			// audio out to speaker or amp
-int o, ch;
+int o = 5, ch;
 void (*fp)(int) = NULL;
 
 // note values for two octave scale

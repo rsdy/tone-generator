@@ -120,8 +120,7 @@ void loop()
 		Serial.print(ch);
 		int tt;
 		tt = charToNote(ch);
-		if (tt) {
+		if (tt)
 			fp(tt);
-		}
 	}
 }
