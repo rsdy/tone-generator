@@ -1,5 +1,4 @@
 #include "music.h"
-#include "sounds.pde"
 #include <TimerOne.h>
 
 void Channel::play()
@@ -34,7 +33,7 @@ void setup()
 	Serial.begin(9600);
 	Timer1.initialize();
 	fp = v_1;
-	o = 5;
+	o = 4;
 }
 
 void freqout(int freq1, int freq2, int t)
@@ -104,13 +103,13 @@ int charToNote(char c)
 		fp = u_3;
 		return 0;
 	case '+':
-		--o;
-		return 0;
-	case '-':
 		++o;
 		return 0;
+	case '-':
+		--o;
+		return 0;
 	case '0':
-		o = 5;
+		o = 4;
 		return 0;
 	default:
 		return 0;
