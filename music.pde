@@ -1,5 +1,4 @@
 #include "music.h"
-#include "sounds.pde"
 
 void setup()
 {
@@ -117,7 +116,7 @@ void loop()
 {
 	if (Serial.available()) {
 		ch = Serial.read();
-		Serial.print(ch);
+		Serial.print(ch,BYTE);
 		int tt;
 		tt = charToNote(ch);
 		if (tt)
