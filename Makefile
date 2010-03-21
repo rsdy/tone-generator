@@ -36,7 +36,7 @@
 
 INSTALL_DIR = /home/rhapsodhy/arduino/arduino-0018/
 TARGET = $(notdir $(CURDIR))
-PORT = /dev/ttyUSB0
+PORT = /dev/ttyUSB1
 UPLOAD_RATE = 19200
 AVRDUDE_PROGRAMMER = stk500v1
 MCU = atmega168
@@ -139,7 +139,7 @@ build: elf hex
 applet/$(TARGET).cpp: $(TARGET).pde
 	test -d applet || mkdir applet
 	echo '#include "WProgram.h"' > applet/$(TARGET).cpp
-	cat $(TARGET).pde >> applet/$(TARGET).cpp
+	cat *.pde >> applet/$(TARGET).cpp
 	cat $(ARDUINO)/main.cpp >> applet/$(TARGET).cpp
 
 elf: applet/$(TARGET).elf

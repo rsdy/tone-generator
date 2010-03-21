@@ -1,15 +1,10 @@
-#include <math.h>		// requires an Atmega168 chip
+#ifndef _MUSIC_H
+#define _MUSIC_H
 
-#define ro 10			// audio out to speaker or amp
-#define lo 11			// audio out to speaker or amp
-int o = 5, ch;
-void (*fp)(int) = 0;
+#define BASEOCTAVE 4
 
-// note values for two octave scale
-// divide them by powers of two to generate other octaves
-float A = 14080;
-float AS = 14917.2;
-float B = 15804.3;
+int octl, octr;
+
 float C = 16744;
 float CS = 17739.7;
 float D = 18794.5;
@@ -19,10 +14,10 @@ float F = 22350.6;
 float FS = 23679.6;
 float G = 25087.7;
 float GS = 26579.5;
-float A2 = 28160;
-float A2S = 29834.5;
-float B2 = 31608.5;
-float C2 = 33488.1;
+float A = 28160;
+float AS = 29834.5;
+float B = 31608.5;
+float C2= 33488.1;
 float C2S = 35479.4;
 float D2 = 37589.1;
 float D2S = 39824.3;
@@ -31,10 +26,11 @@ float F2 = 44701.2;
 float F2S = 47359.3;
 float G2 = 50175.4;
 float G2S = 53159;
-float A3 = 56320;
+float A2 = 56320;
 
 //octaves  - corresponds to piano octaves
-float oct[] = { 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+// oct[0] means the 0. octave
+float oct[] = { 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2 };
 
 //rhythm values
 int wh = 1024;
@@ -49,13 +45,4 @@ int dsx = 96;
 int sx = 64;
 int thx = 32;
 
-// major scale just for demo, hack this
-
-float majScale[] = {
-	A, B, CS, D, E, FS, GS, A2, B2, C2S, D2, E2, F2S, G2S, A3
-};
-
-void v_1(int);
-void u_2(int);
-void u_3(int);
-void freqout(int, int, int);
+#endif
