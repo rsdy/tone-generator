@@ -4,12 +4,9 @@ require 'rubygems'
 require 'Qt'
 
 module Keyboard
-	class PassThru < Qt::Object
-		def [](i) return i end
-	end
 	Layout = [
 		#F1
-		PassThru.new,
+		Qt::Object.new { def [](i) return i end },
 		#F2
 		{#top
 		'q' => 'q', '2' => '2', 'w' => 'w',	'3' => '3',	'e' => 'e',	'r' => 'r',
