@@ -1,7 +1,8 @@
 #include "music.h"
 #include "channel.h"
+#include <TimerOne.h>
 
-void handleNote(char c)
+void handleNote(uint8_t c)
 {
 	switch (c) {
 	case 'q':
@@ -84,13 +85,11 @@ void setup()
 {
 	Serial.begin(9600);
 	octl = octr = BASEOCTAVE;
+	Timer1.initialize();
 }
 
 void loop()
 {
 	if (Serial.available())
 		handleNote(Serial.read());
-
-	rightChannel.play();
-	leftChannel.play();
 }

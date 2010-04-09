@@ -1,28 +1,37 @@
 #include "channel.h"
+#include <TimerOne.h>
+#include <FrequencyTimer2.h>
 
-void Channel::play()
+inline void Channel::set(uint16_t freq)
 {
-	if (!active) return;
-
-	tnow = micros();
-	if (tnow - tlast >= period) {
-		state = !state;
-		digitalWrite(pin, state);
-		tlast = tnow;
-	}
+	DDRB |= _BV(pin);
 }
 
-void Channel::stop() {
-	active = false;
-	pinMode(pin, INPUT);
+inline void Channel::stop()
+{
+	DDRB &= ~_BV(pin);
 }
 
-void Channel::set(unsigned int freq)
+inline void Timer2Channel::stop()
 {
-	period = (500000 / freq);
-	state = false;
-	tlast = micros();
-	active = true;
+	FrequencyTimer2::disable();
+	Channel::stop();
+}
 
-	pinMode(pin, OUTPUT);
+inline void Timer2Channel::set(uint16_t freq)
+{
+	Channel::set(pin);
+	FrequencyTimer2::setPeriod(1000000/freq);
+	FrequencyTimer2::enable();
+}
+
+inline void Timer1Channel::stop()
+{
+	Timer1.stop();
+}
+
+inline void Timer1Channel::set(uint16_t freq)
+{
+	Channel::set(pin);
+	Timer1.pwm(pin, 512, 1000000/freq);
 }

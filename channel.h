@@ -1,26 +1,39 @@
 #ifndef _CHANNEL_H
 #define _CHANNEL_H
 
-#define ro 10			// audio out to speaker or amp
-#define lo 11			// audio out to speaker or amp
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+#define ro PB2			// audio out to speaker or amp
+#define lo PB3			// audio out to speaker or amp
 
 class Channel {
-private:
-	unsigned char pin;
-	unsigned int period;
-	unsigned long int tlast, tnow;
-	bool state;
-	bool active;
+protected:
+	uint8_t pin;
 
 public:
-	Channel(unsigned char pin) : pin(pin), active(false) {}
+	Channel(uint8_t pin) : pin(pin) {}
 
-	void play();
-	void set(unsigned int freq);
+	virtual void set(uint16_t freq);
+	virtual void stop();
+};
+
+class Timer1Channel : public Channel {
+public:
+	Timer1Channel(uint16_t pin) : Channel(pin) {}
+	void set(uint16_t freq);
 	void stop();
 };
 
-Channel leftChannel(lo);
-Channel rightChannel(ro);
+class Timer2Channel : public Channel {
+public:
+	Timer2Channel(uint16_t pin)
+		: Channel(pin) {}
+	void set(uint16_t freq);
+	void stop();
+};
+
+Timer2Channel leftChannel(lo);
+Timer1Channel rightChannel(ro);
 
 #endif
