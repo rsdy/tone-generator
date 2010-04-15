@@ -40,41 +40,56 @@ module Keyboard
 	]
 end
 
-class EventFilter < Qt::Object
-	attr_writer :serial
-	def eventFilter(object, event)
-		return false unless Qt::KeyEvent === event
-		@keymap ||= Keyboard::Layout[0]
+class InputLine < Qt::BoxLayout
+	class InputFilter < Qt::Object
+		def initialize(serial)
+			super(nil)
+			@serial = serial
+		end
 
-		if event.key >= Qt::Key_F1 and event.key <= Qt::Key_F4
-			@keymap = Keyboard::Layout[event.key - 0x01000030]
+		def eventFilter(object, event)
+			return false unless Qt::KeyEvent === event
+			@keymap ||= Keyboard::Layout[0]
+
+			if event.key >= Qt::Key_F1 and event.key <= Qt::Key_F4
+				@keymap = Keyboard::Layout[event.key - 0x01000030]
+
+				return true
+			end
+
+			if
+			
+			key = event.text.strip
+			if
+			@serial.print @keymap[key] if key != ''
+			@serial.flush
 
 			return true
 		end
-		
-		key = event.text.strip
-		@serial.print @keymap[key] if key != ''
-		@serial.flush
+	end
 
-		return true
+	def initialize(filter, parent = nil)
+		super(Qt::BoxLayout::LeftToRight, parent)
+		# input line setup
+		line = Qt::LineEdit self
+		line.installInputFilter(filter)
+		line.setMinimumWidth 150
+		# tempo meter
 	end
 end
 
 class Main < Qt::Widget
-	def initialize(filter, parent = nil)
+	def initialize(serial, parent = nil)
 		super(parent)
+		@serial = serial
 
-		line = Qt::LineEdit.new(self)
-		line.installEventFilter filter
+		line = InputLine.new InputLine::InputFilter.new(@serial), self
 	end
 end
 
 app = Qt::Application.new(ARGV)
 File.open(ARGV[0], 'w') do |file|
-	filter = EventFilter.new
-	filter.serial = file
-
-	window = Main.new filter
+	window = Main.new file
 	window.show
 	app.exec
 	file.close
