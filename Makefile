@@ -52,7 +52,7 @@ SRC =  $(ARDUINO)/pins_arduino.c $(ARDUINO)/wiring.c \
 $(ARDUINO)/wiring_analog.c $(ARDUINO)/wiring_digital.c \
 $(ARDUINO)/wiring_pulse.c \
 $(ARDUINO)/wiring_shift.c $(ARDUINO)/WInterrupts.c
-CXXSRC =  $(INSTALL_DIR)/libraries/TimerOne/TimerOne.cpp $(ARDUINO)/HardwareSerial.cpp $(ARDUINO)/WMath.cpp \
+CXXSRC =  $(INSTALL_DIR)/libraries/TimerOne/TimerOne.cpp $(INSTALL_DIR)/libraries/FrequencyTimer2/FrequencyTimer2.cpp $(ARDUINO)/HardwareSerial.cpp $(ARDUINO)/WMath.cpp \
 $(ARDUINO)/Print.cpp
 FORMAT = ihex
 
@@ -72,7 +72,7 @@ CDEFS = -DF_CPU=$(F_CPU)
 CXXDEFS = -DF_CPU=$(F_CPU)
 
 # Place -I options here
-CINCS = -I$(ARDUINO) -I$(INSTALL_DIR)/libraries/TimerOne
+CINCS = -I$(ARDUINO) -I$(INSTALL_DIR)/libraries/TimerOne -I$(INSTALL_DIR)/libraries/FrequencyTimer2
 CXXINCS = -I$(ARDUINO)
 
 # Compiler flag to set the C Standard level.
