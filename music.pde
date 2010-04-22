@@ -1,80 +1,60 @@
-#include "music.h"
+#include "notes.h"
 #include "channel.h"
 #include <TimerOne.h>
+
+#define BASEBPM 100
+
+static uint8_t bpm = BASEBPM;
+static uint16_t beat;
+static uint32_t last = millis();
+static uint32_t now;
 
 void handleNote(uint8_t c)
 {
 	switch (c) {
-	case 'q':
-		leftChannel.set(C/oct[octl]); break;
-	case '2':
-		leftChannel.set(CS/oct[octl]); break;
-	case 'w':
-		leftChannel.set(D/oct[octl]); break;
-	case '3':
-		leftChannel.set(DS/oct[octl]); break;
-	case 'e':
-		leftChannel.set(E/oct[octl]); break;
-	case 'r':
-		leftChannel.set(F/oct[octl]); break;
-	case '5':
-		leftChannel.set(FS/oct[octl]); break;
-	case 't':
-		leftChannel.set(G/oct[octl]); break;
-	case '6':
-		leftChannel.set(GS/oct[octl]); break;
-	case 'z':
-		leftChannel.set(A/oct[octl]); break;
-	case 's':
-		leftChannel.set(AS/oct[octl]); break;
-	case 'x':
-		leftChannel.set(B/oct[octl]); break;
+	case 'q': leftChannel.play_note(C); break;
+	case '2': leftChannel.play_note(CS); break;
+	case 'w': leftChannel.play_note(D); break;
+	case '3': leftChannel.play_note(DS); break;
+	case 'e': leftChannel.play_note(E); break;
+	case 'r': leftChannel.play_note(F); break;
+	case '5': leftChannel.play_note(FS); break;
+	case 't': leftChannel.play_note(G); break;
+	case '6': leftChannel.play_note(GS); break;
+	case 'z': leftChannel.play_note(A); break;
+	case 's': leftChannel.play_note(AS); break;
+	case 'x': leftChannel.play_note(B); break;
 /////////////////
-	case 'u':
-		rightChannel.set(C/oct[octr]); break;
-	case '8':
-		rightChannel.set(CS/oct[octr]); break;
-	case 'i':
-		rightChannel.set(D/oct[octr]); break;
-	case '9':
-		rightChannel.set(DS/oct[octr]); break;
-	case 'o':
-		rightChannel.set(E/oct[octr]); break;
-	case 'p':
-		rightChannel.set(F/oct[octr]); break;
-	case '-':
-		rightChannel.set(FS/oct[octr]); break;
-	case '[':
-		rightChannel.set(G/oct[octr]); break;
-	case '=':
-		rightChannel.set(GS/oct[octr]); break;
-	case 'm':
-		rightChannel.set(A/oct[octr]); break;
-	case 'k':
-		rightChannel.set(AS/oct[octr]); break;
-	case ',':
-		rightChannel.set(B/oct[octr]); break;
+	case 'u': rightChannel.play_note(C); break;
+	case '8': rightChannel.play_note(CS); break;
+	case 'i': rightChannel.play_note(D); break;
+	case '9': rightChannel.play_note(DS); break;
+	case 'o': rightChannel.play_note(E); break;
+	case 'p': rightChannel.play_note(F); break;
+	case '-': rightChannel.play_note(FS); break;
+	case '[': rightChannel.play_note(G); break;
+	case '=': rightChannel.play_note(GS); break;
+	case 'm': rightChannel.play_note(A); break;
+	case 'k': rightChannel.play_note(AS); break;
+	case ',': rightChannel.play_note(B); break;
 /////////////////
-	case 'f':
-		leftChannel.stop();
-		break;
-	case 'l':
-		rightChannel.stop();
-		break;
-	case 'g':
-		++octl;
-		break;
-	case 'v':
-		--octl;
-		break;
-	case '\'':
-		++octr;
-		break;
-	case '/':
-		--octr;
-		break;
+	case 'f': leftChannel.stop(); break;
+	case 'l': rightChannel.stop(); break;
+	case 'g': ++leftChannel.octave; break;
+	case 'v': --leftChannel.octave; break;
+	case '\'': ++rightChannel.octave; break;
+	case '/': --rightChannel.octave; break;
+	case 'G': ++leftChannel.tempo; break;
+	case 'V': --leftChannel.tempo; break;
+	case '"': ++rightChannel.tempo; break;
+	case '?': --rightChannel.tempo; break;
 	case '\\':
-		octl = octr = BASEOCTAVE;
+		leftChannel.reset_octave();
+		rightChannel.reset_octave();
+		break;
+	case '|':
+		leftChannel.reset_tempo();
+		rightChannel.reset_tempo();
 		break;
 	default:
 		break;
@@ -84,7 +64,6 @@ void handleNote(uint8_t c)
 void setup()
 {
 	Serial.begin(9600);
-	octl = octr = BASEOCTAVE;
 	Timer1.initialize();
 }
 
@@ -92,4 +71,15 @@ void loop()
 {
 	if (Serial.available())
 		handleNote(Serial.read());
+	
+	beat = 60000/bpm;
+	now = millis();
+	if(now - last > beat) {
+		leftChannel.begin();
+		rightChannel.begin();
+		last = now;
+	}
+	
+	leftChannel.tick(beat, now);
+	rightChannel.tick(beat, now);
 }

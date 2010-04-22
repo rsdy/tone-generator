@@ -1,12 +1,6 @@
 #ifndef _MUSIC_H
 #define _MUSIC_H
 
-#include <inttypes.h>
-
-#define BASEOCTAVE 4
-
-uint8_t octl, octr;
-
 float C = 16744;
 float CS = 17739.7;
 float D = 18794.5;
@@ -29,9 +23,5 @@ float F2S = 47359.3;
 float G2 = 50175.4;
 float G2S = 53159;
 float A2 = 56320;
-
-//octaves  - corresponds to piano octaves
-// oct[0] means the 0. octave
-uint16_t oct[] = { 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2 };
 
 #endif
